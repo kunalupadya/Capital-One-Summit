@@ -1,0 +1,1 @@
+web: gunicorn draftsim.wsgi --keep-alive 5 --log-level debug
