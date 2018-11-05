@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kunal Upadya-Capital One</title>
+<style>body {
+    background-image: url("/static/img/paper-background.jpg");
+}</style>
+<script type="text/javascript" src="{% static '/data/jQuery/jquery-3.3.1.min.js' %}"> </script>
+<link rel="stylesheet" type="text/css" href="{% static 'data/DataTables/datatables.min.css' %}"/>
+<script type="text/javascript" src= "{% static 'data/DataTables/datatables.min.js' %}"></script>
+</head>
+<body>
+
+1. Bike share data interestingly showed that the most popular
+<script type="text/javascript" class="init">$(document).ready( function () {
+    $('#table_id').DataTable();
+} );</script>
+<table id="table_id" class="display">
+    <thead>
+        <tr>
+            <th>Station ID</th>
+            <th>Number of Uses</th>
+        </tr>
+
+    </thead>
+    <tbody>
+<tr>
+<td>3005</td>
+<td>6261</td>
+</tr>
+<tr>
+<td>3031</td>
+<td>5517</td>
+</tr>
+    </tbody>
+</table>
+data was first cleaned, all rows with null values were dropped. Most common starting and ending locations were then calculated by iterating through the dataset and storing each location in a hashmap. Considered the fact that some rides that occur at the same
+
+</body>
+</html>

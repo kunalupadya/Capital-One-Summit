@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/bike.png" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Bike Share</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/startbootstrap-new-age-gh-pages/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="../../static/startbootstrap-new-age-gh-pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/startbootstrap-new-age-gh-pages/vendor/simple-line-icons/css/simple-line-icons.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'data/DataTables/datatables.min.css' %}"/>
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="../../static/startbootstrap-new-age-gh-pages/device-mockups/device-mockups.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/startbootstrap-new-age-gh-pages/css/new-age.min.css" rel="stylesheet">
+    <script type="text/javascript" src="{% static '/data/jQuery/jquery-3.3.1.min.js' %}"> </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'data/DataTables/datatables.min.css' %}"/>
+    <script type="text/javascript" src= "{% static 'data/DataTables/datatables.min.js' %}"></script>
+
+</head>
+
+<body id="page-top">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Home</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#mostpop">Most Popular Stations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#dist">Average Distances</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#commute">Number of Commuters</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#season">Seasonal Changes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#hour">Hourly Metrics</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="masthead">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-lg-7 my-auto text-center">
+                <div class="header-content mx-auto" style="text-align: center">
+                    <h1>Bike Share Data</h1>
+                    &nbsp;
+                    <h2>by Kunal Upadya</h2>
+                    &nbsp;&nbsp;
+
+                    <a href="#mostpop" class="btn btn-outline btn-xl js-scroll-trigger">Let's Explore!</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div style="width: 400px;vertical-align: center;position: relative;top: 44%;left: 30%;
+    margin: -15% 0 0 -25%;">
+                    <img class="img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 100%;" src="../../static/img/bigbike.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="masthead" id="mostpop">
+    <div class="container h-100">
+        <div class="row">
+            <div class="col-md-10 mx-auto text-center" style="margin-top: -40px;padding-bottom: 20px">
+                <h2 class="section-heading">Most Popular Locations</h2></div>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding: 20px">
+                <img class = " img-fluid" src="../../static/img/startlocs.png" alt="">
+            </div>
+            <p style="width:100%;text-align: center;font-size: small">Figure 1: A plot of all Bike Stations, with the number of uses of each station indicated by the color of the dot</p>
+            <br>
+            <p style="width: 100%;text-indent: 50px">To begin locating the most popular start and stop locations, it is helpful to plot the data geographically first. Figure 1 displays all of the bike stations, including the Venice beach and Culver City locations (3009 and 3039 respectively). These two locations in particular are more isolated, as Culver City is about 9 miles from downtown and 5 miles from Venice Beach. Because these two locations have less traffic than most other stations, it is possible to exclude them and take a look at all the other (downtown) locations.</p>
+            <div class="col-12" style="padding: 20px">
+                <img class = "img-fluid" src="../../static/img/startlocs_mini.png" alt="">
+            </div>
+            <p style="width:100%;text-align: center;font-size: small">Figure 2: A plot of Bike Stations vs. Trip Start Occurrence, with the number of uses of each station indicated by the color and size of the dot</p>
+        </div>
+        <div class="row">
+            <div class="col-7">
+                <h2 style="font-size: xx-large">Most Popular Start Locations:</h2>
+                The most popular start locations were stations 3069, 3030, and 3005. These stations had 5,091, 5,037, and 4,851 uses each. These stations are indicated by the largest and darkest dots on Figure 2. These were calculated by adding the number of trips that started at each location (using a hashmap).
+            </div>
+            <div class="col-5">
+                <table id="table_id" class="display">
+                    <thead>
+                    <tr>
+                        <th>Station ID</th>
+                        <th>Number of Uses</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>3069</td>
+                        <td>5091</td>
+                    </tr>
+                    <tr>
+                        <td>3030</td>
+                        <td>5037</td>
+                    </tr>
+                    <tr>
+                        <td>3005</td>
+                        <td>4851</td>
+                    </tr>
+                    <tr>
+                        <td>3064</td>
+                        <td>4614</td>
+                    </tr>
+                    <tr>
+                        <td>3031</td>
+                        <td>4594</td>
+                    </tr>
+                    <tr>
+                        <td>3014</td>
+                        <td>4547</td>
+                    </tr>
+                    <tr>
+                        <td>3042</td>
+                        <td>3980</td>
+                    </tr>
+                    <tr>
+                        <td>3082</td>
+                        <td>3859</td>
+                    </tr>
+                    <tr>
+                        <td>3022</td>
+                        <td>3858</td>
+                    </tr>
+                    <tr>
+                        <td>3067</td>
+                        <td>3775</td>
+                    </tr>
+                    <tr>
+                        <td>3035</td>
+                        <td>3394</td>
+                    </tr>
+                    <tr>
+                        <td>3038</td>
+                        <td>3282</td>
+                    </tr>
+                    <tr>
+                        <td>3055</td>
+                        <td>3245</td>
+                    </tr>
+                    <tr>
+                        <td>3068</td>
+                        <td>3232</td>
+                    </tr>
+                    <tr>
+                        <td>3049</td>
+                        <td>3135</td>
+                    </tr>
+                    <tr>
+                        <td>3034</td>
+                        <td>3024</td>
+                    </tr>
+                    <tr>
+                        <td>3048</td>
+                        <td>2975</td>
+                    </tr>
+                    <tr>
+                        <td>3063</td>
+                        <td>2920</td>
+                    </tr>
+                    <tr>
+                        <td>3007</td>
+                        <td>2765</td>
+                    </tr>
+                    <tr>
+                        <td>3006</td>
+                        <td>2678</td>
+                    </tr>
+                    <tr>
+                        <td>3027</td>
+                        <td>2541</td>
+                    </tr>
+                    <tr>
+                        <td>3032</td>
+                        <td>2451</td>
+                    </tr>
+                    <tr>
+                        <td>3074</td>
+                        <td>2327</td>
+                    </tr>
+                    <tr>
+                        <td>3062</td>
+                        <td>2268</td>
+                    </tr>
+                    <tr>
+                        <td>3052</td>
+                        <td>2229</td>
+                    </tr>
+                    <tr>
+                        <td>3047</td>
+                        <td>2201</td>
+                    </tr>
+                    <tr>
+                        <td>3008</td>
+                        <td>2136</td>
+                    </tr>
+                    <tr>
+                        <td>3075</td>
+                        <td>2113</td>
+                    </tr>
+                    <tr>
+                        <td>3051</td>
+                        <td>2037</td>
+                    </tr>
+                    <tr>
+                        <td>3023</td>
+                        <td>1964</td>
+                    </tr>
+                    <tr>
+                        <td>3016</td>
+                        <td>1940</td>
+                    </tr>
+                    <tr>
+                        <td>3019</td>
+                        <td>1898</td>
+                    </tr>
+                    <tr>
+                        <td>3029</td>
+                        <td>1891</td>
+                    </tr>
+                    <tr>
+                        <td>3076</td>
+                        <td>1891</td>
+                    </tr>
+                    <tr>
+                        <td>3058</td>
+                        <td>1786</td>
+                    </tr>
+                    <tr>
+                        <td>3024</td>
+                        <td>1637</td>
+                    </tr>
+                    <tr>
+                        <td>3026</td>
+                        <td>1548</td>
+                    </tr>
+                    <tr>
+                        <td>3056</td>
+                        <td>1456</td>
+                    </tr>
+                    <tr>
+                        <td>3066</td>
+                        <td>1410</td>
+                    </tr>
+                    <tr>
+                        <td>3046</td>
+                        <td>1338</td>
+                    </tr>
+                    <tr>
+                        <td>3021</td>
+                        <td>1254</td>
+                    </tr>
+                    <tr>
+                        <td>3011</td>
+                        <td>1244</td>
+                    </tr>
+                    <tr>
+                        <td>3018</td>
+                        <td>1199</td>
+                    </tr>
+                    <tr>
+                        <td>3028</td>
+                        <td>1174</td>
+                    </tr>
+                    <tr>
+                        <td>3037</td>
+                        <td>1149</td>
+                    </tr>
+                    <tr>
+                        <td>3036</td>
+                        <td>1142</td>
+                    </tr>
+                    <tr>
+                        <td>3040</td>
+                        <td>1012</td>
+                    </tr>
+                    <tr>
+                        <td>3065</td>
+                        <td>983</td>
+                    </tr>
+                    <tr>
+                        <td>3078</td>
+                        <td>868</td>
+                    </tr>
+                    <tr>
+                        <td>3054</td>
+                        <td>861</td>
+                    </tr>
+                    <tr>
+                        <td>3077</td>
+                        <td>793</td>
+                    </tr>
+                    <tr>
+                        <td>3059</td>
+                        <td>739</td>
+                    </tr>
+                    <tr>
+                        <td>3033</td>
+                        <td>705</td>
+                    </tr>
+                    <tr>
+                        <td>3079</td>
+                        <td>686</td>
+                    </tr>
+                    <tr>
+                        <td>3025</td>
+                        <td>619</td>
+                    </tr>
+                    <tr>
+                        <td>3081</td>
+                        <td>592</td>
+                    </tr>
+                    <tr>
+                        <td>3020</td>
+                        <td>525</td>
+                    </tr>
+                    <tr>
+                        <td>3010</td>
+                        <td>427</td>
+                    </tr>
+                    <tr>
+                        <td>3060</td>
+                        <td>378</td>
+                    </tr>
+                    <tr>
+                        <td>3057</td>
+                        <td>374</td>
+                    </tr>
+                    <tr>
+                        <td>3080</td>
+                        <td>190</td>
+                    </tr>
+                    <tr>
+                        <td>3045</td>
+                        <td>185</td>
+                    </tr>
+                    <tr>
+                        <td>3039</td>
+                        <td>115</td>
+                    </tr>
+                    <tr>
+                        <td>4108</td>
+                        <td>76</td>
+                    </tr>
+                    <tr>
+                        <td>3009</td>
+                        <td>55</td>
+                    </tr>
+                    <tr>
+                        <td>3053</td>
+                        <td>13</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12" style="padding: 20px">
+                <img class = "img-fluid" src="../../static/img/stoplocs_mini.png" alt="">
+            </div>
+            <p style="width:100%;text-align: center;font-size: small">Figure 3: A plot of Bike Stations vs. Trip End Occurrence, with the number of uses of each station indicated by the color and size of the dot</p>
+        </div>
+        <div class="row">
+            <div class="col-7">
+                <h2 style="font-size: xx-large">Most Popular Stop Locations:</h2>
+                The most popular stop locations were stations 3005, 3031, and 3014. These stations had 6,261, 5,517, and 5,382 uses each. These stations are indicated by the largest and darkest dots on Figure 3. These were also calculated by adding the number of trips that started at each location (using a hashmap). Somewhat notably, these are not the same stations that were most popular as start locations, but the most popular start locations also had high traffic as stop locations
+            </div>
+            <div class="col-5">
+                <table id="table_id1" class="display">
+                    <thead>
+                    <tr>
+                        <th>Station ID</th>
+                        <th>Number of Uses</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>3005</td>
+                        <td>6261</td>
+                    </tr>
+                    <tr>
+                        <td>3031</td>
+                        <td>5517</td>
+                    </tr>
+                    <tr>
+                        <td>3014</td>
+                        <td>5382</td>
+                    </tr>
+                    <tr>
+                        <td>3042</td>
+                        <td>5293</td>
+                    </tr>
+                    <tr>
+                        <td>3069</td>
+                        <td>5069</td>
+                    </tr>
+                    <tr>
+                        <td>3082</td>
+                        <td>4701</td>
+                    </tr>
+                    <tr>
+                        <td>3064</td>
+                        <td>4602</td>
+                    </tr>
+                    <tr>
+                        <td>3022</td>
+                        <td>4335</td>
+                    </tr>
+                    <tr>
+                        <td>3030</td>
+                        <td>4222</td>
+                    </tr>
+                    <tr>
+                        <td>3063</td>
+                        <td>3763</td>
+                    </tr>
+                    <tr>
+                        <td>3035</td>
+                        <td>3512</td>
+                    </tr>
+                    <tr>
+                        <td>3067</td>
+                        <td>3478</td>
+                    </tr>
+                    <tr>
+                        <td>3038</td>
+                        <td>3194</td>
+                    </tr>
+                    <tr>
+                        <td>3048</td>
+                        <td>3156</td>
+                    </tr>
+                    <tr>
+                        <td>3034</td>
+                        <td>3028</td>
+                    </tr>
+                    <tr>
+                        <td>3006</td>
+                        <td>2823</td>
+                    </tr>
+                    <tr>
+                        <td>3032</td>
+                        <td>2778</td>
+                    </tr>
+                    <tr>
+                        <td>3023</td>
+                        <td>2495</td>
+                    </tr>
+                    <tr>
+                        <td>3049</td>
+                        <td>2488</td>
+                    </tr>
+                    <tr>
+                        <td>3055</td>
+                        <td>2458</td>
+                    </tr>
+                    <tr>
+                        <td>3074</td>
+                        <td>2361</td>
+                    </tr>
+                    <tr>
+                        <td>3075</td>
+                        <td>2275</td>
+                    </tr>
+                    <tr>
+                        <td>3008</td>
+                        <td>2242</td>
+                    </tr>
+                    <tr>
+                        <td>3062</td>
+                        <td>2198</td>
+                    </tr>
+                    <tr>
+                        <td>3019</td>
+                        <td>2175</td>
+                    </tr>
+                    <tr>
+                        <td>3007</td>
+                        <td>1993</td>
+                    </tr>
+                    <tr>
+                        <td>3047</td>
+                        <td>1993</td>
+                    </tr>
+                    <tr>
+                        <td>3076</td>
+                        <td>1958</td>
+                    </tr>
+                    <tr>
+                        <td>3058</td>
+                        <td>1940</td>
+                    </tr>
+                    <tr>
+                        <td>3051</td>
+                        <td>1939</td>
+                    </tr>
+                    <tr>
+                        <td>3016</td>
+                        <td>1906</td>
+                    </tr>
+                    <tr>
+                        <td>3027</td>
+                        <td>1861</td>
+                    </tr>
+                    <tr>
+                        <td>3052</td>
+                        <td>1493</td>
+                    </tr>
+                    <tr>
+                        <td>3011</td>
+                        <td>1491</td>
+                    </tr>
+                    <tr>
+                        <td>3021</td>
+                        <td>1489</td>
+                    </tr>
+                    <tr>
+                        <td>3056</td>
+                        <td>1481</td>
+                    </tr>
+                    <tr>
+                        <td>3037</td>
+                        <td>1427</td>
+                    </tr>
+                    <tr>
+                        <td>3036</td>
+                        <td>1422</td>
+                    </tr>
+                    <tr>
+                        <td>3018</td>
+                        <td>1402</td>
+                    </tr>
+                    <tr>
+                        <td>3029</td>
+                        <td>1398</td>
+                    </tr>
+                    <tr>
+                        <td>3026</td>
+                        <td>1212</td>
+                    </tr>
+                    <tr>
+                        <td>3066</td>
+                        <td>1203</td>
+                    </tr>
+                    <tr>
+                        <td>3046</td>
+                        <td>1134</td>
+                    </tr>
+                    <tr>
+                        <td>3065</td>
+                        <td>1016</td>
+                    </tr>
+                    <tr>
+                        <td>3068</td>
+                        <td>983</td>
+                    </tr>
+                    <tr>
+                        <td>3078</td>
+                        <td>883</td>
+                    </tr>
+                    <tr>
+                        <td>3054</td>
+                        <td>840</td>
+                    </tr>
+                    <tr>
+                        <td>3077</td>
+                        <td>811</td>
+                    </tr>
+                    <tr>
+                        <td>3033</td>
+                        <td>778</td>
+                    </tr>
+                    <tr>
+                        <td>3024</td>
+                        <td>760</td>
+                    </tr>
+                    <tr>
+                        <td>3040</td>
+                        <td>737</td>
+                    </tr>
+                    <tr>
+                        <td>3059</td>
+                        <td>722</td>
+                    </tr>
+                    <tr>
+                        <td>3079</td>
+                        <td>717</td>
+                    </tr>
+                    <tr>
+                        <td>3025</td>
+                        <td>713</td>
+                    </tr>
+                    <tr>
+                        <td>3081</td>
+                        <td>644</td>
+                    </tr>
+                    <tr>
+                        <td>3020</td>
+                        <td>604</td>
+                    </tr>
+                    <tr>
+                        <td>3028</td>
+                        <td>521</td>
+                    </tr>
+                    <tr>
+                        <td>3010</td>
+                        <td>412</td>
+                    </tr>
+                    <tr>
+                        <td>3057</td>
+                        <td>399</td>
+                    </tr>
+                    <tr>
+                        <td>3060</td>
+                        <td>389</td>
+                    </tr>
+                    <tr>
+                        <td>3045</td>
+                        <td>319</td>
+                    </tr>
+                    <tr>
+                        <td>3080</td>
+                        <td>178</td>
+                    </tr>
+                    <tr>
+                        <td>3039</td>
+                        <td>115</td>
+                    </tr>
+                    <tr>
+                        <td>4108</td>
+                        <td>107</td>
+                    </tr>
+                    <tr>
+                        <td>3009</td>
+                        <td>68</td>
+                    </tr>
+                    <tr>
+                        <td>3053</td>
+                        <td>12</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="masthead bg-primary" id="dist">
+    <div class="container h-100">
+        <div class="row">
+            <div class="col-md-10 mx-auto text-center" style="margin-top: -40px;padding-bottom: 20px">
+                <h2 class="section-heading">Averge Distance Travelled</h2></div>
+
+        </div>
+        <div class="row">
+            <p style="width: 100%;text-indent: 50px">
+                Average distance travelled per bike ride was initially calculated by using the law of Haversines to calculate the distance between the start and end stations of each bike ride, and averaging all the distances calculated. However after looking at the data, I noticed that this was causing all the round trip rides, which start and end at the same station, were all returning a distance of zero. As there was no other data that could reliably be used to calculate distance, I was left with the choice of either extrapolating distance from the duration of each of these rides, or to completely omit the round trips from this calculation. The latter of these two options is shown below as Figure 4. The other approach is shown as Figure 5.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 75%;" src="../../static/img/distance_distribution_one_way.png" alt="">
+            </div>
+            <p style="width:100%;text-align: center;font-size: small">Figure 4: Distance travelled per bike ride calculated from only one-way trips</p>
+            <br>
+            <p style="width: 100%;text-indent: 50px">Figure 4 shows the distribution of distances travelled per bike ride, calculated using only the one-way trips. Approximately 12,000 out of the 130,000 trips were omitted as round-trip rides, leaving 118,000 trips in the sample set. As the graph shows, this leads to a right skewed distribution, with a mean of 0.73 and a standard deviation of 0.41 miles per bike ride. The majority of bike rides ranged between 0 and 2 miles, and the maximum distance biked was 14.06 miles. As shown by the graph, the distribution was relatively quantized and not smooth, as there were only a certain amount of possible distances (from each existing station).</p>
+            <div class="col-12" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 75%;" src="../../static/img/distance_distribution.png" alt="">
+            </div>
+            <p style="width:100%;text-align: center;font-size: small">Figure 5: Distance travelled per bike ride calculated from all trips</p>
+            <p style="width: 100%;text-indent: 50px">Figure 5 shows the distribution of distances travelled per bike ride, calculated by extrapolating the distances of bike rides from the duration of bike rides. Bike durations were multiplied by the average speed of bikers (calculated by dividing distance of one way bike riders by the duration of those trips). One issue that arose occurred in the case where a person may have rented a bike and forgotten to check it back in or had stopped somewhere instead of travelling relatively continuously. In this case, extrapolating using duration would result in a some grossly unphysical distance estimates, with one ride being estimated at 102 miles. In order to remediate this, I discarded obvious outliers by removing distances higher than 15 (the highest distance from the one-way passes) as anything higher than this would likely be anomalous. This resulted in a distribution that was slightly more right skewed than the previous one, with slightly less outliers. One positive aspect of this distribution is that because the distances are not as quantized now, the distribution is smoother. This distribution also had a higher mean and standard deviation than the one way distribution, with a mean of 0.92 and a standard deviation of 1.07. The maximum distance biked was 14.95 miles. Overall, the one way distribution seemed more useful and applicable than the extrapolated one, as its measurements were made with more solid data, instead of being muddied with extrapolated data.</p>
+        </div>
+    </div>
+</section>
+
+<section class="masthead bg-light" id="commute">
+    <div class="container h-100">
+        <div class="row">
+            <div class="col-md-10 mx-auto text-center" style="margin-top: -40px;padding-bottom: 20px">
+                <h2 class="section-heading">Number of Regular Commuters Using the Service</h2></div>
+        </div>
+        <div class="row">
+            <p style="width: 100%;text-indent: 50px">
+                Calculating the number of commuters using the service was relatively difficult compared to the previous two analyses, as there was no customer ID that could reliably indicate if the same person was using the bike share service. Instead, I had to operate under the assumption that if a trip occurred at the same hour on different days, then this was the same person. I was then left with the decision of deciding how many of these "commutes" would represent a regular commuter. Figures 6-8, shown below represent the number of commuters per week when a commuter was defined as 2, 3, and 4 trips at the same time and location respectively.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-4" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 100%;" src="../../static/img/commuters_over_time2.png" alt="">
+            </div>
+            <div class="col-4" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 100%;" src="../../static/img/commuters_over_time3.png" alt="">
+            </div>
+            <div class="col-4" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 100%;" src="../../static/img/commuters_over_time4.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <p style="width:100%;text-align: center;font-size: small">Figure 6: Number of Commuters (defined as 2 trips per week)</p>
+            </div>
+            <div class="col-4">
+                <p style="width:100%;text-align: center;font-size: small">Figure 7: Number of Commuters (defined as 3 trips per week)</p>
+            </div>
+            <div class="col-4">
+                <p style="width:100%;text-align: center;font-size: small">Figure 8: Number of Commuters (defined as 4 trips per week)</p>
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+            <p style="width: 100%;text-indent: 50px">Figures 6, 7, and 8 show the number of commuters when a commuter was defined as 2, 3, and 4 commutes a week respectively. A commute was defined as trips during a week on different days at the same hour, from the same location, and to the same destination. Using these definitions, there were an average of 710, 182, and 71 commuters per week using the bike sharing service. I chose to model commuters as a function of weeks because the number of commuters per week varied wildly by time of year. Despite different specific commuter numbers, all the graphs show that there are very few commuters during the first few weeks when the program is just beginning, and the program peaks in usage during the late summer/early fall period before seeing reduced usage during the wintertime. While the number of commuters depends on the threshold of repeated rides used to define a commuter, I would say that the actual number of commuters is best modelled by Figure 7 (3 trips per week). Also, as the number of commuters depends on the time of year, it is fair to say that the mean weekly number of commuters is 182, with a standard deviation of 90.</p>
+        </div>
+    </div>
+</section>
+
+
+<section class="masthead bg-warning" id="season">
+    <div class="container h-100">
+        <div class="row">
+            <div class="col-md-10 mx-auto text-center" style="margin-top: -40px;padding-bottom: 20px">
+                <h2 class="section-heading">Changes with Seasons</h2></div>
+        </div>
+        <div class="row">
+            <p style="width: 100%;text-indent: 50px">
+                As a bike sharing business is an athletic based business, I thought it would be interesting to look at how ridership and pass type change over time. Figure 9 displays ridership over time, while Figure 10 displays pass type percentages over time.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-6" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 100%;" src="../../static/img/numriders.png" alt="">
+            </div>
+            <div class="col-6" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 100%;" src="../../static/img/pass_type.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p style="width:100%;text-align: center;font-size: small">Figure 9: Number of Riders per Week</p>
+            </div>
+            <div class="col-6">
+                <p style="width:100%;text-align: center;font-size: small">Figure 10: Pass Types as a Percentage of Total Riders per Week</p>
+            </div>
+            <div class="row">
+                &nbsp;
+                <p style="width: 100%;text-indent: 50px">This data was interesting for a few reasons. The data showed that the distribution of the number of riders closely matched the distrbution of the number of commuters, indicating that they are correlated (which checked out with my intuition). There were a total of 131,276 rides taken on the bike share platform in this time period, with an average of 3,366 riders per week and a maximum of 5,924 riders in mid-August. The pass types used over this period were also interesting, as the popular pass types changed significantly in the first few weeks, but stayed relatively constant after initial changes were made and had time to stabilize. At the beginning, there wre only two pass types, flex and monthly. However, following the introduction of the walk-up pass in early August, the monthly pass and flex passes made up a smaller percentage of the data, and the walk-up pass grew to make up 40% of the passes being used. The introduction of the walk-up pass also coincides with the largest spike in total weekly riders, indicating that the walk-up pass was a very good business move and was very well recieved by customers. The walk-up pass seemed to make up a large percentage of the growth from mid-August, which was when the number of riders peaked at about 6,000 weekly riders. However, after the introduction of the walk-up pass, usage of the flex pass dropped to less than 10%, indicating that these passes may not a valuable path to explore further in the future. Since the introduction of the walk-up pass, the monthly pass regained some of its previous popularity, making up about 60% of all passes used, while walk-up passes became slightly less popular, making up about 35% of passes used per week.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="masthead bg-light" id="hour">
+    <div class="container h-100">
+        <div class="row">
+            <div class="col-md-10 mx-auto text-center" style="margin-top: -40px;padding-bottom: 20px">
+                <h2 class="section-heading">Rides per Hour</h2></div>
+        </div>
+        <div class="row">
+            <p style="width: 100%;text-indent: 50px">
+                One final thing I thought would be interesting to look at was to look at the number of users of the bike share platform at each hour in the day. This would give information about which hours were most popular, and which could be used to perform maintenance or similar tasks. This data is displayed as Figure 11.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding: 20px">
+                <img class = "img-fluid" style="display: block;margin-left: auto;margin-right: auto;width: 70%;" src="../../static/img/numriders.png" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <p style="width:100%;text-align: center;font-size: small">Figure 11: Number of Riders per Hour of the Day</p>
+            </div>
+            <div class="row">
+                &nbsp;
+                <p style="width: 100%;text-indent: 50px"> This data confirmed what was expected, the bikes had the highest usage during the daytime hours of 8 AM to 7 PM and had the least usage from 3-5 AM. From 3-5 AM, it would be a good time to perform maintenance as there is very low usage so it would not result in lost earning potential. There is a small spike at 8 AM, likely signifying that some people use the bike share to get to work for their morning commute. There is also an uptick at 5 PM, likely signifying people commuting home in the evening. Overall, this graph shows the use patterns of the bikes in the bike sharing program.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<footer>
+    <div class="container">
+        <p>&copy; Your Website 2018. All Rights Reserved.</p>
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <a href="#">Privacy</a>
+            </li>
+            <li class="list-inline-item">
+                <a href="#">Terms</a>
+            </li>
+            <li class="list-inline-item">
+                <a href="#">FAQ</a>
+            </li>
+        </ul>
+    </div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" class="init">$(document).ready( function () {
+    $('#table_id').DataTable({
+        "aaSorting":[[1,'desc']]
+    });
+} );</script>
+<script type="text/javascript" class="init">$(document).ready( function () {
+    $('#table_id1').DataTable({
+        "aaSorting":[[1,'desc']]
+    });
+} );</script>
+{#    <script src="vendor/jquery/jquery.min.js"></script>#}
+<script type="text/javascript" src="{% static '/data/jQuery/jquery-3.3.1.min.js' %}"> </script>
+<script src="../../static/startbootstrap-new-age-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src= "{% static 'data/DataTables/datatables.min.js' %}"></script>
+
+<!-- Plugin JavaScript -->
+<script src="../../static/startbootstrap-new-age-gh-pages/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for this template -->
+<script src="../../static/startbootstrap-new-age-gh-pages/js/new-age.min.js"></script>
+
+</body>
+
+</html>
