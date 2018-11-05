@@ -8,6 +8,7 @@ import matplotlib.dates as mdates
 import csv
 import datetime
 
+#sets the paths for generated tables and images
 imgpat = "/Users/kunalupadya/python_projects/capitalonesummit/data/static/img/"
 pat = "/Users/kunalupadya/python_projects/capitalonesummit/data/static/my_data/"
 
@@ -46,8 +47,7 @@ startmaplocs = {}
 stopmaplocs = {}
 dists = []
 one_way_only = []
-##average trip length
-# print(data.head().to_string())
+##used to calculate average trip length, start station popularity and stop station popularity
 for index, row in data.iterrows():
     startstat = int(row['Starting Station ID'])
     stopstat = int(row['Ending Station ID'])
@@ -74,11 +74,13 @@ for index, row in data.iterrows():
     else:
         stationstopmap[stopstat] += 1
 
+#sorts the stations occurrences
 sorted_start = sorted(stationstartmap.items(), key=operator.itemgetter(1))
 sorted_stop = sorted(stationstopmap.items(), key=operator.itemgetter(1))
 sorted_start.reverse()
 sorted_stop.reverse()
 
+#writes locations of stations and number of uses per station to csv files so tableau could be used to plot geographically
 with open(pat+'startstat.csv', mode='w') as statfile:
     writeme = csv.writer(statfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     writeme.writerow(['Station', 'Occurrence', 'Latitude', 'Longitude'])
@@ -105,18 +107,18 @@ print('all')
 distframe = pd.Series(dists)
 print(distframe.describe())
 
+#plot distance distribution of all trips
 dist_distribution = plt.figure()
 ax=dist_distribution.add_subplot(111)
 sns.distplot(dists, bins= 100)
 ax.set_xlim(left=0,right = 5)
-# ax.Axes.set_xlim(right=8)
 plt.xlabel('Distance (miles)')
 plt.ylabel('Density')
 plt.title('Density of Distance Travelled per Bike Ride')
 plt.savefig(imgpat+'distance_distribution.png')
 plt.show()
 
-
+#plot distance distribution of one way trips only
 dist_distribution = plt.figure()
 ax=dist_distribution.add_subplot(111)
 sns.distplot(one_way_only, bins= 100)
@@ -129,9 +131,8 @@ plt.savefig(imgpat+'distance_distribution_one_way.png')
 plt.show()
 
 
-# data.between_time('0:15', '0:45')
 
-## creates data tables
+## creates data tables for html
 starttable = dh.tuplev(sorted_start) #start data, returned as an html table
 endtable = dh.tuplev(sorted_stop) #stop data, returned as an html table
 with open(pat + "starttable.txt", "w") as text_file:
@@ -139,13 +140,9 @@ with open(pat + "starttable.txt", "w") as text_file:
 with open(pat + "endtable.txt", "w") as text_file:
     text_file.write(endtable)
 
-# print()
-# print(sorted_start)
-# print(sorted_stop)
-# clean_data =
 
 
-## used to calculate the number of users per year
+## used to calculate the number of users per year, commuters, number of flex pass users, number of monthly users, and number of walk up users
 weekind = data['Start Time'][0].weekofyear
 weeks = []
 commuters = []
@@ -196,6 +193,7 @@ while weekind !=14:
     print(commuters)
     print(weekind)
 
+#plot all the data
 commute = plt.figure()
 ax = commute.add_subplot(111)
 plt.plot(weeks, commuters, 'bo-')
@@ -227,6 +225,8 @@ plt.savefig(imgpat + 'numriders.png')
 plt.show()
 
 
+
+#calculate percentatges of type of pass users
 percflex = []
 percmonth = []
 percwalk = []
@@ -256,13 +256,9 @@ plt.gcf().subplots_adjust(bottom=0.2)
 plt.savefig(imgpat + 'pass_type.png')
 plt.show()
 
-print(numriders)
-print(numflexers)
-print(nummonthlies)
 
 
-
-# same thing except with times
+# calculates number of riders per hour of day
 timeind = 0
 times = []
 numriders = []
@@ -270,32 +266,8 @@ x = [datetime.datetime(2018,10,31,0,0) + datetime.timedelta(hours=i) for i in ra
 while timeind !=24:
     weekdf = data.loc[data['Start Time'].dt.hour == timeind, :].reset_index(drop=True)
     numriders.append(len(weekdf))
-    # for k in range(7):
-    #         day1 = weekdf['Start Time'][0].dayofyear + k
-    #         dayones = weekdf.loc[weekdf['Start Time'].dt.dayofyear== day1,:].reset_index(drop=True)
-    #         # day2 = weekdf['Start Time'][0].dayofyear + j
-    #         # daytwos = weekdf.loc[weekdf['Start Time'].dt.dayofyear == day2, :].reset_index(drop=True)
-    #         for index, row in dayones.iterrows():
-    #             stid = row['Starting Station ID']
-    #             enid = row['Ending Station ID']
-    #             time1 = row['Start Time'].hour
-    #             time2 = row['End Time'].hour
-    #             # comp = daytwos.loc[(daytwos['Starting Station ID'] == stid) & (daytwos['Ending Station ID'] == enid) & ((daytwos['Start Time'].dt.hour == time1) | (daytwos['End Time'].dt.hour == time2)), ['Starting Station ID', 'Ending Station ID', 'Start Time', 'End Time']]
-    #             # if len(comp) != 0: # indicates that there is an entry in another day at the same time going from the same starting location to the ending location
-    #             strrep = str(row['Starting Station ID']) + str(row['Ending Station ID']) + str(row['Start Time'].hour)+str(row['End Time'].hour)
-    #             if strrep not in commutersset:
-    #                     # weeklycommuters +=1
-    #                 commutersset[strrep] = 1
-    #             else:
-    #                 commutersset[strrep] += 1
-    #                 if commutersset[strrep] == 3:
-    #                     weeklycommuters +=1
-    #                 if commutersset[strrep] == 4:
-    #                     commutersset[strrep] = 1
     timeind +=1
-    # timeind = timeind % 25
-    # print(commuters)
-    print(timeind)
+#plot number of riders per hour of day
 times = plt.figure()
 ax = times.add_subplot(111)
 plt.plot(x,numriders)
