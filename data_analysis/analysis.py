@@ -165,24 +165,20 @@ while weekind !=14:
     for k in range(7):
             day1 = weekdf['Start Time'][0].dayofyear + k
             dayones = weekdf.loc[weekdf['Start Time'].dt.dayofyear== day1,:].reset_index(drop=True)
-            # day2 = weekdf['Start Time'][0].dayofyear + j
-            # daytwos = weekdf.loc[weekdf['Start Time'].dt.dayofyear == day2, :].reset_index(drop=True)
             for index, row in dayones.iterrows():
                 stid = row['Starting Station ID']
                 enid = row['Ending Station ID']
                 time1 = row['Start Time'].hour
                 time2 = row['End Time'].hour
-                # comp = daytwos.loc[(daytwos['Starting Station ID'] == stid) & (daytwos['Ending Station ID'] == enid) & ((daytwos['Start Time'].dt.hour == time1) | (daytwos['End Time'].dt.hour == time2)), ['Starting Station ID', 'Ending Station ID', 'Start Time', 'End Time']]
-                # if len(comp) != 0: # indicates that there is an entry in another day at the same time going from the same starting location to the ending location
                 strrep = str(row['Starting Station ID']) + str(row['Ending Station ID']) + str(row['Start Time'].hour)+str(row['End Time'].hour)
                 if strrep not in commutersset:
                         # weeklycommuters +=1
                     commutersset[strrep] = 1
                 else:
                     commutersset[strrep] += 1
-                    if commutersset[strrep] == 3:
+                    if commutersset[strrep] == 4: #change this value to create different threshold plots for commuters
                         weeklycommuters +=1
-                    if commutersset[strrep] == 4:
+                    if commutersset[strrep] == 5: #change this value to create different threshold plots for commuters
                         commutersset[strrep] = 1
 
     commuters.append(weeklycommuters)
@@ -190,8 +186,6 @@ while weekind !=14:
     weekind = weekind % 53
     if weekind ==0:
         weekind +=1
-    print(commuters)
-    print(weekind)
 
 #plot all the data
 commute = plt.figure()
@@ -206,7 +200,7 @@ myFmt = mdates.DateFormatter('%b')
 ax.xaxis.set_major_formatter(myFmt)
 plt.setp(plt.gca().xaxis.get_majorticklabels(),'rotation', 45)
 plt.gcf().subplots_adjust(bottom=0.2)
-plt.savefig(imgpat + 'commuters_over_time4.png')
+plt.savefig(imgpat + 'commuters_over_time4.png') #change the number at the end to create different plots
 plt.show()
 
 numrides = plt.figure()
